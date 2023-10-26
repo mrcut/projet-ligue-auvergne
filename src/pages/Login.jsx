@@ -1,73 +1,84 @@
-import { useState } from "react";
-import { Container, Paper, Typography, TextField, Button } from "@mui/material";
+import { useContext, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { useNavigate } from "react-router";
+import Container from "@mui/material/Container";
+import Button from "@mui/material/Button";
+import { TextField } from "@mui/material";
+import InputMail, { regEXEmail } from "../components/forms/InputMail";
+import UserContext from "../components/contexts/UserContext";
 
 const Login = () => {
+  const { setUser } = useContext(UserContext);
+
   const [userLog, setUserLog] = useState({ email: "", mdp: "" });
+  const [isValidEmail, setIsValidEmail] = useState(false);
   const navigate = useNavigate();
+
+  const handleInputChange = (e, fieldName) => {
+    const { value } = e.target;
+    setUserLog((prevUserLog) => ({
+      ...prevUserLog,
+      [fieldName]: value,
+    }));
+
+    if (fieldName === "email") {
+      setIsValidEmail(regEXEmail.test(value));
+    }
+  };
 
   const submit = async (e) => {
     e.preventDefault();
     try {
-
-      const response = await axios.post("http://localhost:5003/Login", userLog, { withCredentials: true });
-      console.log(response.data)
-      if(response.data.message === 'Utilisateur connecté avec succès'){
-        sessionStorage.setItem('USER', JSON.stringify(userLog.email));
-        navigate('/')
+      const response = await axios.post(
+        "http://localhost:5003/Login",
+        userLog,
+        { withCredentials: true }
+      );
+      console.log(response.data);
+      if (response.data.message === "Utilisateur connecté avec succès") {
+        console.log(response.data);
+        console.log(response.data.user);
+        setUser(response.data.user);
+        localStorage.setItem("user", JSON.stringify(response.data.user));
+        navigate("/");
       }
-
     } catch (error) {
       console.error("Error during login:", error.message);
     }
   };
 
   return (
-    <>
-      <Container component="main" maxWidth="xs">
-        <Paper elevation={3}>
-          <Typography variant="h5">Connexion</Typography>
-          <form onSubmit={submit}>
-            <TextField
-              variant="outlined"
-              margin="normal"
-              fullWidth
-              id="email"
-              label="Email"
-              name="email"
-              value={userLog.email}
-              onChange={(e) =>
-                setUserLog((prevUserLog) => ({
-                  ...prevUserLog,
-                  email: e.target.value,
-                }))
-              }
-            />
-            <TextField
-              variant="outlined"
-              margin="normal"
-              fullWidth
-              name="mdp"
-              label="Mot de passe"
-              type="password"
-              id="mdp"
-              autoComplete="current-password"
-              value={userLog.mdp}
-              onChange={(e) =>
-                setUserLog((prevUserLog) => ({
-                  ...prevUserLog,
-                  mdp: e.target.value,
-                }))
-              }
-            />
-            <Button type="submit" fullWidth variant="contained" color="primary">
-              Connexion
-            </Button>
-          </form>
-        </Paper>
+    <div>
+      <h1>Login</h1>
+      <Container maxWidth="sm">
+        <form onSubmit={submit}>
+          <InputMail
+            label="Login"
+            placeholder="Votre Login"
+            onChange={(e) => handleInputChange(e, "email")}
+            value={userLog.email}
+          />
+          <TextField
+            fullWidth
+            name="mdp"
+            type="password"
+            variant="outlined"
+            label="Mot de passe"
+            placeholder="Votre Mot de passe"
+            onChange={(e) => handleInputChange(e, "mdp")}
+            value={userLog.mdp}
+          />
+          <Button
+            type="submit"
+            variant="contained"
+            color="primary"
+            disabled={!isValidEmail}
+          >
+            Login
+          </Button>
+        </form>
       </Container>
-    </>
+    </div>
   );
 };
 
