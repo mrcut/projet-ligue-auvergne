@@ -12,6 +12,8 @@ import { Link } from "react-router-dom";
 
 const Navbar = () => {
   const [anchorEl, setAnchorEl] = useState(null);
+  const storedUser = localStorage.getItem("user");
+  const userRole = storedUser ? JSON.parse(storedUser).role : null;
 
   const handleMenu = (event) => {
     setAnchorEl(event.currentTarget);
@@ -28,39 +30,58 @@ const Navbar = () => {
           <Button color="inherit" component={Link} to="/">
             Home
           </Button>
-          <Button color="inherit" component={Link} to="/products">
-            Produits Foot
-          </Button>
-          <Button color="inherit" component={Link} to="/products">
-            Produits Natation
-          </Button>
-        </Box>
-
-        <Box sx={{ textAlign: "center", flexGrow: 1 }}>
-          <Typography variant="h6" color="inherit">
-            Projet Ligue Auvergne
-          </Typography>
+          {userRole && (
+            <>
+              <Button color="inherit" component={Link} to="/products">
+                Produits Foot
+              </Button>
+            </>
+          )}
         </Box>
 
         <Box>
-          <Button color="inherit" onClick={handleMenu}>
-            Menu
-          </Button>
-          <Menu
-            anchorEl={anchorEl}
-            open={Boolean(anchorEl)}
-            onClose={handleClose}
-          >
-            <MenuItem onClick={handleClose} component={Link} to="/account">
-              Account
-            </MenuItem>
-            <MenuItem onClick={handleClose} component={Link} to="/products">
-              Liste des Produits
-            </MenuItem>
-            <MenuItem onClick={handleClose} component={Link} to="/users">
-              List Users
-            </MenuItem>
-          </Menu>
+          {!userRole && (
+            <>
+              <Button color="inherit" component={Link} to="/login">
+                Se connecter
+              </Button>
+            </>
+          )}
+
+          {userRole && (
+            <>
+              <Button color="inherit" onClick={handleMenu}>
+                Menu
+              </Button>
+              <Menu
+                anchorEl={anchorEl}
+                open={Boolean(anchorEl)}
+                onClose={handleClose}
+              >
+                <MenuItem onClick={handleClose} component={Link} to="/account">
+                  Account
+                </MenuItem>
+                {userRole === "admin" && (
+                  <>
+                    <MenuItem
+                      onClick={handleClose}
+                      component={Link}
+                      to="/products"
+                    >
+                      Liste des Produits
+                    </MenuItem>
+                    <MenuItem
+                      onClick={handleClose}
+                      component={Link}
+                      to="/users"
+                    >
+                      List Users
+                    </MenuItem>
+                  </>
+                )}
+              </Menu>
+            </>
+          )}
         </Box>
       </Toolbar>
     </AppBar>
