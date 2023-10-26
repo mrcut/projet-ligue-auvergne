@@ -6,17 +6,20 @@ import ProductList from "../components/products/ProductList";
 import ProductDetail from "../components/products/ProductDetail";
 import ProductAdd from "../components/products/ProductAdd";
 import ProductEdit from "../components/products/ProductEdit";
+import ProductDelete from "../components/products/ProductDelete";
 
 const MainRoutes = () => {
   return (
     <Routes>
       <Route path="/" element={<Home />} />
       <Route path="/products" element={<ProductList />} />
-      <Route path="/product/:productId" element={<ProductDetail />} />
+      <Route path="/product/:id" element={<ProductDetail />} />
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
       <Route path="/addProduct" element={<ProductAdd />} />
-      <Route path="/editProduct" element={<ProductEdit />} />
+      <Route path="/editProduct/:id" element={<ProductEdit />} />
+      <Route path="/deleteProduct/:id" element={<ProductDelete />} />
+
     </Routes>
   );
 };

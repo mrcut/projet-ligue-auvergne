@@ -5,7 +5,13 @@ import { useNavigate } from "react-router";
 import validator from "validator";
 
 const Register = () => {
-  const [userRegister, setUserRegister] = useState({ email: "", mdp: "" });
+  const [userRegister, setUserRegister] = useState({
+    email: "",
+    nom: "",
+    prenom: "",
+    mdp: "",
+    tel: "",
+  });
   const navigate = useNavigate();
 
   const submit = async (e) => {
@@ -61,6 +67,42 @@ const Register = () => {
                   : ""
               }
             />
+            <TextField
+              variant="outlined"
+              margin="normal"
+              fullWidth
+              name="prenom"
+              label="prenom"
+              type="string"
+              id="prenom"
+              autoComplete="new-prenom"
+              value={userRegister.prenom}
+              onChange={(e) =>
+                setUserRegister((prevUserRegister) => ({
+                  ...prevUserRegister,
+                  prenom: e.target.value,
+                }))
+              }
+              required
+            />
+            <TextField
+              variant="outlined"
+              margin="normal"
+              fullWidth
+              name="nom"
+              label="nom"
+              type="string"
+              id="nom"
+              autoComplete="new-nom"
+              value={userRegister.nom}
+              onChange={(e) =>
+                setUserRegister((prevUserRegister) => ({
+                  ...prevUserRegister,
+                  nom: e.target.value,
+                }))
+              }
+              required
+            />
 
             <TextField
               variant="outlined"
@@ -80,6 +122,25 @@ const Register = () => {
               }
               required
             />
+
+            <TextField
+              variant="outlined"
+              margin="normal"
+              fullWidth
+              name="tel"
+              label="tel"
+              type="string"
+              id="tel"
+              autoComplete="new-telephone"
+              value={userRegister.tel}
+              onChange={(e) =>
+                setUserRegister((prevUserRegister) => ({
+                  ...prevUserRegister,
+                  tel: e.target.value,
+                }))
+              }
+            />
+
             <Button type="submit" fullWidth variant="contained" color="primary">
               S'inscrire
             </Button>
