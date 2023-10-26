@@ -10,12 +10,12 @@ const Login = () => {
   const submit = async (e) => {
     e.preventDefault();
     try {
+
       const response = await axios.post("http://localhost:5003/Login", userLog, { withCredentials: true });
       console.log(response.data)
       if(response.data.message === 'Utilisateur connecté avec succès'){
         navigate('/')
       }
-
 
     } catch (error) {
       console.error("Error during login:", error.message);
