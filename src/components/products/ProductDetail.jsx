@@ -14,14 +14,26 @@ const ProductDetail = () => {
   const [product, setProduct] = useState({});
 
   useEffect(() => {
-    axios
-      .get(`http://localhost:5003/ProduitsListe/${id}`)
-      .then((response) => {
-        setProduct(response.data);
-      })
-      .catch((error) => {
-        console.error("Error fetching product details:", error.message);
-      });
+    const userStored = localStorage.getItem("user");
+    const token = userStored ? JSON.parse(userStored).token : null;
+
+    if (token) {
+      axios
+        .get(`http://localhost:5003/ProduitsListe/${id}`, {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        })
+        .then((response) => {
+          setProduct(response.data);
+        })
+        .catch((error) => {
+          console.error("Error fetching product details:", error.message);
+        });
+    } else {
+      console.error("Token not found");
+    }
   }, [id]);
 
   return (

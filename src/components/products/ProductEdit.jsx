@@ -21,19 +21,26 @@ const ProductEdit = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    axios
-      .get(`http://localhost:5003/ProduitsListe/${id}`)
-      .then((response) => {
-        setProduct(response.data);
-        console.log(product)
-        setNewValues({
-          nom: response.data.nom || "",
-          quantite: response.data.quantite || 0,
+    const userStored = localStorage.getItem("user");
+    const token = userStored ? JSON.parse(userStored).token : null;
+
+    if (token) {
+      axios
+        .get(`http://localhost:5003/ProduitsListe/${id}`, {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        })
+        .then((response) => {
+          setProduct(response.data);
+        })
+        .catch((error) => {
+          console.error("Error fetching product details:", error.message);
         });
-      })
-      .catch((error) => {
-        console.error("Error fetching product details:", error.message);
-      });
+    } else {
+      console.error("Token not found");
+    }
   }, [id]);
 
   const handleInputChange = (e) => {
@@ -61,7 +68,11 @@ const ProductEdit = () => {
           <Grid item xs={12} md={6}>
             <Card>
               <CardContent>
-                <Typography variant="h6" component="div" sx={{ marginBottom: 1 }}>
+                <Typography
+                  variant="h6"
+                  component="div"
+                  sx={{ marginBottom: 1 }}
+                >
                   Ancien Nom: {product.nom}
                 </Typography>
                 <Typography color="textSecondary">
@@ -89,10 +100,9 @@ const ProductEdit = () => {
                   margin="normal"
                   fullWidth
                   id="quantite"
-                  label="Nouvelle Quantité"
                   name="quantite"
                   type="number"
-                  value={newValues.quantite}
+                  value={product.quantite}
                   onChange={handleInputChange}
                 />
               </CardContent>
@@ -100,7 +110,12 @@ const ProductEdit = () => {
           </Grid>
         </Grid>
 
-        <Button type="submit" variant="contained" color="primary" sx={{ marginTop: 2 }}>
+        <Button
+          type="submit"
+          variant="contained"
+          color="primary"
+          sx={{ marginTop: 2 }}
+        >
           Enregistrer les modifications
         </Button>
       </form>
