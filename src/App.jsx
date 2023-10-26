@@ -1,19 +1,15 @@
-import { useState } from "react";
-import Header from "./components/layout/Header";
+import { BrowserRouter } from "react-router-dom";
 import Footer from "./components/layout/Footer";
+import Header from "./components/layout/Header";
 import MainRoutes from "./routes/MainRoutes";
 
 function App() {
-  const [count, setCount] = useState(0);
-
   return (
-    <>
-      <BrowserRouter>
-        <Header />
-        <MainRoutes />
-        <Footer />
-      </BrowserRouter>
-    </>
+    <BrowserRouter>
+      <Header />
+      <MainRoutes />
+      <Footer />
+    </BrowserRouter>
   );
 }
 
