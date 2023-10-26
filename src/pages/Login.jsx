@@ -31,6 +31,7 @@ const Login = () => {
     try {
       const response = await axios.post(
         "http://localhost:5003/Login",
+
         userLog,
         { withCredentials: true }
       );
@@ -41,7 +42,10 @@ const Login = () => {
         setUser({ ...response.data.user, token: response.data.token });
         localStorage.setItem(
           "user",
-          JSON.stringify({ ...response.data.user, token: response.data.token })
+          JSON.stringify({
+            ...response.data.user,
+            token: response.data.token,
+          })
         );
         navigate("/");
       }
