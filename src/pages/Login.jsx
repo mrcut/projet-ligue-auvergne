@@ -38,8 +38,11 @@ const Login = () => {
       if (response.data.message === "Utilisateur connecté avec succès") {
         console.log(response.data);
         console.log(response.data.user);
-        setUser(response.data.user);
-        localStorage.setItem("user", JSON.stringify(response.data.user));
+        setUser({ ...response.data.user, token: response.data.token });
+        localStorage.setItem(
+          "user",
+          JSON.stringify({ ...response.data.user, token: response.data.token })
+        );
         navigate("/");
       }
     } catch (error) {
