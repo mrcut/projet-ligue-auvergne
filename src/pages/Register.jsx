@@ -2,22 +2,34 @@ import React, { useState } from "react";
 import { Container, Paper, Typography, TextField, Button } from "@mui/material";
 import axios from "axios";
 import { useNavigate } from "react-router";
+import validator from "validator";
 
 const Register = () => {
-  const [userRegister, setUserRegister] = useState({ email: "", mdp: "" }); // Ajuste ici le nom du champ pour le mot de passe
+  const [userRegister, setUserRegister] = useState({ email: "", mdp: "" });
   const navigate = useNavigate();
 
   const submit = async (e) => {
     e.preventDefault();
-    try {
-      const response = await axios.post(
-        "http://localhost:5003/Register",
-        userRegister,
-        { withCredentials: true }
-      );
-      console.log(response.data); // Gérer la réponse si nécessaire
-    } catch (error) {
-      console.error("Error during registration:", error.message);
+
+    // Validation de l'email avec validator
+    if (!validator.isEmail(userRegister.email)) {
+      console.error("Email invalide");
+      return;
+    } else {
+      try {
+        const response = await axios.post(
+          "http://localhost:5003/Register",
+          userRegister,
+          { withCredentials: true }
+        );
+        if (response.data.message === "Utilisateur enregistré avec succès") {
+          navigate("/");
+        } else {
+          console.log(response.data.message);
+        }
+      } catch (error) {
+        console.error("Error during registration:", error.message);
+      }
     }
   };
 
@@ -42,24 +54,28 @@ const Register = () => {
                 }))
               }
               required
-              inputProps={{
-                pattern: "[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}"
-              }}
+              error={!validator.isEmail(userRegister.email)}
+              helperText={
+                !validator.isEmail(userRegister.email)
+                  ? "Veuillez entrer une adresse email valide"
+                  : ""
+              }
             />
+
             <TextField
               variant="outlined"
               margin="normal"
               fullWidth
-              name="mdp" // Ajuste ici le nom du champ pour le mot de passe
+              name="mdp"
               label="Mot de passe"
               type="password"
-              id="mdp" // Ajuste ici le nom du champ pour le mot de passe
+              id="mdp"
               autoComplete="new-password"
-              value={userRegister.mdp} // Ajuste ici le nom du champ pour le mot de passe
+              value={userRegister.mdp}
               onChange={(e) =>
                 setUserRegister((prevUserRegister) => ({
                   ...prevUserRegister,
-                  mdp: e.target.value, // Ajuste ici le nom du champ pour le mot de passe
+                  mdp: e.target.value,
                 }))
               }
               required
