@@ -1,5 +1,5 @@
 import { useContext, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import axios from "axios";
 import Container from "@mui/material/Container";
 import Button from "@mui/material/Button";
@@ -85,6 +85,9 @@ const Login = () => {
           </Button>
         </form>
       </Container>
+      <Button color="inherit" component={Link} to="/register">
+        Créer son compte
+      </Button>
     </div>
   );
 };
