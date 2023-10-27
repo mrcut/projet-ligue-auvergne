@@ -1,18 +1,18 @@
-import { Route, Routes, Navigate } from "react-router";
+import { Navigate, Route, Routes } from "react-router";
+import Basket from "../components/basket/Basket";
+import { useAuth } from "../components/contexts/AuthProvider";
+import ProductAdd from "../components/products/ProductAdd";
+import ProductDelete from "../components/products/ProductDelete";
+import ProductDetail from "../components/products/ProductDetail";
+import ProductEdit from "../components/products/ProductEdit";
+import ProductList from "../components/products/ProductList";
+import UserDelete from "../components/users/UserDelete";
+import UserEdit from "../components/users/UserEdit";
+import UsersList from "../components/users/UserList";
+import UserProfile from "../components/users/UserProfile";
 import Home from "../pages/Home";
 import Login from "../pages/Login";
 import Register from "../pages/Register";
-import ProductList from "../components/products/ProductList";
-import ProductDetail from "../components/products/ProductDetail";
-import ProductAdd from "../components/products/ProductAdd";
-import ProductEdit from "../components/products/ProductEdit";
-import ProductDelete from "../components/products/ProductDelete";
-import { useAuth } from "../components/contexts/AuthProvider";
-import UsersList from "../components/users/UserList";
-import UserEdit from "../components/users/UserEdit";
-import UserDetail from "../components/users/UserDetails";
-import UserDelete from "../components/users/UserDelete";
-import UserProfile from "../components/users/UserProfile";
 
 const MainRoutes = () => {
   const { user } = useAuth();
@@ -31,6 +31,14 @@ const MainRoutes = () => {
           <Route path="/users" element={<UsersList />} />
           <Route path="/modifierUser/:id" element={<UserEdit />} />
           <Route path="/deleteUser/:id" element={<UserDelete />} />
+        </>
+      )}
+
+      {user?.role === "commercant" && (
+        <>
+          <Route path="/basket" element={<Basket />} />
+          <Route path="/products" element={<ProductList />} />
+          <Route path="/detailProduct/:id" element={<ProductDetail />} />
         </>
       )}
 

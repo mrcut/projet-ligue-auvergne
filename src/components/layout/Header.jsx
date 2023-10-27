@@ -70,6 +70,17 @@ const Navbar = () => {
         <Box>
           {user?.role && (
             <>
+              {user?.role === "commercant" && (
+                <>
+                  <Button
+                    color="inherit"
+                    component={Link}
+                    to={`/basket`}
+                  >
+                    Panier
+                  </Button>
+                </>
+              )}
               <Button color="inherit" onClick={handleMenu}>
                 <AccountCircleRounded sx={{ fontSize: "large" }} />
               </Button>
