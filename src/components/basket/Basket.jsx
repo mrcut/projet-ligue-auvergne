@@ -1,49 +1,41 @@
-import React, { useState, useEffect } from "react";
+import { Delete, RemoveShoppingCart } from "@mui/icons-material";
 import {
-  Container,
-  Typography,
   Button,
-  Grid,
   Card,
-  CardContent,
   CardActions,
+  CardContent,
+  Container,
+  Grid,
+  IconButton,
+  Typography,
 } from "@mui/material";
-import { Link } from "react-router-dom";
+import { useBasket } from "../contexts/BasketContext";
+
 const Basket = () => {
-  const [basket, setBasket] = useState([]);
-
-  useEffect(() => {
-    // Charger le panier depuis le local storage
-    const storedBasket = localStorage.getItem("basket");
-    if (storedBasket) {
-      setBasket(JSON.parse(storedBasket));
-    }
-  }, []);
-
-  const removeFromBasket = (productId) => {
-    // Supprimer un produit du panier
-    const updatedBasket = basket.filter((item) => item._id !== productId);
-    setBasket(updatedBasket);
-    // Mettre à jour le local storage
-    localStorage.setItem("basket", JSON.stringify(updatedBasket));
-  };
+  const { basket, removeFromBasket, clearBasket } = useBasket();
 
   return (
     <Container>
-      <Typography variant="h5" sx={{ my: 3 }}>
-        Panier
+      <Typography variant="h4" sx={{ my: 3, textAlign: "center" }}>
+        Shopping Basket
       </Typography>
       {basket.length === 0 ? (
-        <Typography variant="body1">Le panier est vide.</Typography>
+        <Typography
+          variant="h6"
+          sx={{ my: 3, textAlign: "center", color: "grey" }}
+        >
+          Your basket is empty
+        </Typography>
       ) : (
         <Grid container spacing={2}>
           {basket.map((item) => (
             <Grid item xs={12} sm={6} md={4} key={item._id}>
               <Card
                 sx={{
-                  height: "100%",
                   display: "flex",
-                  flexDirection: "column",
+                  flexDirection: "row",
+                  alignItems: "center",
+                  p: 2,
                 }}
               >
                 <CardContent sx={{ flex: 1 }}>
@@ -53,15 +45,20 @@ const Basket = () => {
                   <Typography color="textSecondary">
                     {item.description}
                   </Typography>
+                  <Typography color="textSecondary">
+                    Price: ${item.price}
+                  </Typography>
+                  <Typography color="textSecondary">
+                    Quantity: {item.quantity}
+                  </Typography>
                 </CardContent>
                 <CardActions>
-                  <Button
-                    size="small"
-                    color="secondary"
+                  <IconButton
+                    edge="end"
                     onClick={() => removeFromBasket(item._id)}
                   >
-                    Supprimer
-                  </Button>
+                    <Delete />
+                  </IconButton>
                 </CardActions>
               </Card>
             </Grid>
@@ -72,10 +69,11 @@ const Basket = () => {
         variant="contained"
         color="primary"
         sx={{ mt: 3 }}
-        component={Link}
-        to="/products"
+        onClick={clearBasket}
+        startIcon={<RemoveShoppingCart />}
+        fullWidth
       >
-        Retour à la Liste des Produits
+        Clear Basket
       </Button>
     </Container>
   );

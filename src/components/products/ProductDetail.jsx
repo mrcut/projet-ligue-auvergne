@@ -50,6 +50,7 @@ const ProductDetail = () => {
             Quantité: {product.quantite}
           </Typography>
           <Typography color="textSecondary">Type: {product.type}</Typography>
+          <Typography color="textSecondary">Prix: {product.price}€</Typography>
         </CardContent>
       </Card>
 

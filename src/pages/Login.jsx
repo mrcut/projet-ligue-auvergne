@@ -59,7 +59,7 @@ const Login = () => {
       sx={{
         display: "flex",
         flexDirection: "column",
-        minHeight: "100vh",
+        minHeight: "80vh",
         justifyContent: "center",
         alignItems: "center",
       }}

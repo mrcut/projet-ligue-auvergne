@@ -2,9 +2,12 @@ import {
   Avatar,
   Button,
   Container,
+  FilledInput,
   FormControl,
+  InputAdornment,
   InputLabel,
   MenuItem,
+  OutlinedInput,
   Select,
   TextField,
   Typography,
@@ -20,6 +23,7 @@ const ProductAdd = () => {
     nom: "",
     quantite: 0,
     type: "foot",
+    price: "",
   });
   const navigate = useNavigate();
 
@@ -93,7 +97,22 @@ const ProductAdd = () => {
               <MenuItem value="natation">Natation</MenuItem>
             </Select>
           </FormControl>
-
+          <OutlinedInput
+            variant="outlined"
+            margin="normal"
+            fullWidth
+            id="price"
+            label="Nouveau Prix"
+            name="price"
+            type="number"
+            value={newProduct.price}
+            onChange={handleInputChange}
+            endAdornment={<InputAdornment position="end">€</InputAdornment>}
+            aria-describedby="outlined-weight-helper-text"
+            inputProps={{
+              "aria-label": "weight",
+            }}
+          />
           <Button
             type="submit"
             fullWidth

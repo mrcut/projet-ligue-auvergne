@@ -35,7 +35,7 @@ const MainRoutes = () => {
           {user.role === "admin" && (
             <>
               <Route path="/addProduct" element={<ProductAdd />} />
-              <Route path="/modifierProduct/:id" element={<ProductEdit />} />
+              <Route path="/editProduct/:id" element={<ProductEdit />} />
               <Route path="/deleteProduct/:id" element={<ProductDelete />} />
               <Route path="/users" element={<UsersList />} />
               <Route path="/modifierUser/:id" element={<UserEdit />} />
@@ -45,7 +45,7 @@ const MainRoutes = () => {
         </>
       )}
 
-      {(user.role === "commercant" || user.role === "admin") && (
+      {(user?.role === "commercant" || user?.role === "admin") && (
         <>
           <Route path="/basket" element={<Basket />} />
           <Route path="/products" element={<ProductList />} />
@@ -53,7 +53,7 @@ const MainRoutes = () => {
         </>
       )}
 
-      {(user?.role === "Adhérant" || user?.role) && (
+      {(user?.role === "adherant" || user?.role) && (
         <>
           <Route path="/products" element={<ProductList />} />
           <Route path="/detailProduct/:id" element={<ProductDetail />} />

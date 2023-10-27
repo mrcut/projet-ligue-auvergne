@@ -9,13 +9,14 @@ import {
   Typography,
 } from "@mui/material";
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link as RouterLink, useNavigate } from "react-router-dom";
 import { useAuth } from "../contexts/AuthProvider";
+import { useBasket } from "../contexts/BasketContext";
 
 const Navbar = () => {
   const [anchorEl, setAnchorEl] = useState(null);
   const { user, setUser } = useAuth();
-
+  const { basket } = useBasket();
   const navigate = useNavigate();
 
   const handleMenu = (event) => {
@@ -30,21 +31,27 @@ const Navbar = () => {
     setUser(null);
     localStorage.removeItem("user");
     navigate("/");
+    handleClose();
   };
+
+  const adminMenuItems = [
+    { label: "Liste des Produits", path: "/products" },
+    { label: "Liste des Users", path: "/users" },
+  ];
 
   return (
     <AppBar position="fixed" color="info">
       <Toolbar sx={{ justifyContent: "space-between" }}>
         <Box>
-          {user?.role && (
+          {user && (
             <>
-              <Button color="inherit" component={Link} to="/products">
+              <Button color="inherit" component={RouterLink} to="/products">
                 Foot
               </Button>
-              <Button color="inherit" component={Link} to="/products">
+              <Button color="inherit" component={RouterLink} to="/products">
                 Tennis
               </Button>
-              <Button color="inherit" component={Link} to="/products">
+              <Button color="inherit" component={RouterLink} to="/products">
                 Natation
               </Button>
             </>
@@ -58,25 +65,26 @@ const Navbar = () => {
                 fontWeight: "bold",
                 color: "white",
                 textShadow: "4px 2px 6px #000",
+                textDecoration: "none",
               }}
-              component={Link}
+              component={RouterLink}
               to="/"
             >
               Projet Ligue Auvergne
             </Typography>
           </Box>
         </Toolbar>
+        <Box>
+          {user && basket.length > 0 && (
+            <Button color="inherit" component={RouterLink} to="/basket">
+              Basket ({basket.length})
+            </Button>
+          )}
+        </Box>
 
         <Box>
-          {user?.role && (
+          {user && (
             <>
-              {(user.role === "commercant" || user.role === "admin") && (
-                <>
-                  <Button color="inherit" component={Link} to={`/basket`}>
-                    Panier
-                  </Button>
-                </>
-              )}
               <Button color="inherit" onClick={handleMenu}>
                 <AccountCircleRounded sx={{ fontSize: "large" }} />
               </Button>
@@ -87,30 +95,23 @@ const Navbar = () => {
               >
                 <MenuItem
                   onClick={handleClose}
-                  component={Link}
-                  to={`/profile/`}
+                  component={RouterLink}
+                  to="/profile"
                 >
                   Account
                 </MenuItem>
+                {user.role === "admin" &&
+                  adminMenuItems.map((item) => (
+                    <MenuItem
+                      key={item.label}
+                      onClick={handleClose}
+                      component={RouterLink}
+                      to={item.path}
+                    >
+                      {item.label}
+                    </MenuItem>
+                  ))}
                 <MenuItem onClick={handleLogout}>Logout</MenuItem>
-                {user?.role === "admin" && [
-                  <MenuItem
-                    key="products"
-                    onClick={handleClose}
-                    component={Link}
-                    to="/products"
-                  >
-                    Liste des Produits
-                  </MenuItem>,
-                  <MenuItem
-                    key="users"
-                    onClick={handleClose}
-                    component={Link}
-                    to="/users"
-                  >
-                    List Users
-                  </MenuItem>,
-                ]}
               </Menu>
             </>
           )}
