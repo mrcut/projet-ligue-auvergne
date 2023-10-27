@@ -1,49 +1,40 @@
+import SendIcon from "@mui/icons-material/Send";
 import { Button, Container, Grid, TextField, Typography } from "@mui/material";
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
-import SendIcon from "@mui/icons-material/Send";
 import { useAuth } from "../contexts/AuthProvider";
 
 const UserProfile = () => {
-  const { id } = useParams();
   const { user, setUser } = useAuth();
   const [newValues, setNewValues] = useState({
     nom: "",
     prenom: "",
     tel: "",
     email: "",
-    role: "",
   });
-  const navigate = useNavigate();
 
   useEffect(() => {
     if (user) {
       axios
-        .get(`http://localhost:5003/UsersList/${id}`, {
+        .get(`http://localhost:5003/UsersList/${user._id}`, {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${user.token}`,
           },
         })
         .then((response) => {
-          setUser(response.data);
-          setNewValues((prevValues) => ({
-            ...prevValues,
+          setNewValues({
             nom: response.data.nom || "",
             prenom: response.data.prenom || "",
             tel: response.data.tel || "",
             email: response.data.email || "",
-            role: response.data.role || "",
-          }));
+          });
         })
         .catch((error) => {
           console.error("Error fetching user details:", error.message);
         });
-    } else {
-      console.error("Token not found");
     }
-  }, [id]);
+  }, [user]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -52,23 +43,22 @@ const UserProfile = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     try {
-      const userStored = localStorage.getItem("user");
-      const token = userStored ? JSON.parse(userStored).token : null;
+      const response = await axios.put(
+        `http://localhost:5003/UserModifier/${user._id}`,
+        newValues,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${user.token}`,
+          },
+        }
+      );
+      const updatedUser = { ...response.data, token: user.token };
 
-      if (!token) {
-        console.error("Token not found");
-        return;
-      }
-
-      await axios.put(`http://localhost:5003/UserModifier/${id}`, newValues, {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      navigate("/users");
+      localStorage.setItem("user", JSON.stringify(updatedUser));
+      setUser(updatedUser);
     } catch (error) {
       console.error("Error updating user:", error.message);
     }
@@ -95,9 +85,9 @@ const UserProfile = () => {
             <TextField
               id="email"
               name="email"
-              label="email"
-              type="mail"
-              value={user.prenom}
+              label="Email"
+              type="email"
+              value={newValues.email}
               variant="outlined"
               onChange={handleChange}
               fullWidth
@@ -107,8 +97,8 @@ const UserProfile = () => {
             <TextField
               id="nom"
               name="nom"
-              label="nom"
-              value={user.nom}
+              label="Nom"
+              value={newValues.nom}
               variant="outlined"
               fullWidth
               onChange={handleChange}
@@ -119,8 +109,8 @@ const UserProfile = () => {
             <TextField
               id="prenom"
               name="prenom"
-              label="prenom"
-              value={user.prenom}
+              label="Prénom"
+              value={newValues.prenom}
               variant="outlined"
               onChange={handleChange}
               fullWidth
@@ -131,8 +121,8 @@ const UserProfile = () => {
             <TextField
               id="tel"
               name="tel"
-              label="tel"
-              value={user.tel}
+              label="Téléphone"
+              value={newValues.tel}
               variant="outlined"
               fullWidth
               onChange={handleChange}
@@ -140,8 +130,13 @@ const UserProfile = () => {
           </Grid>
 
           <Grid item xs={12}>
-            <Button variant="contained" endIcon={<SendIcon />} fullWidth>
-              Send
+            <Button
+              variant="contained"
+              endIcon={<SendIcon />}
+              type="submit"
+              fullWidth
+            >
+              Envoyer
             </Button>
           </Grid>
         </Grid>

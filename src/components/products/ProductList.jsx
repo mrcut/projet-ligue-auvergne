@@ -12,10 +12,10 @@ import {
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../contexts/AuthProvider";
 const ProduitsListe = () => {
-  const navigate = useNavigate();
   const [produits, setProduits] = useState([]);
   const [selectedProducts, setSelectedProducts] = useState([]);
   const { user } = useAuth();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchProduits = async () => {
@@ -37,7 +37,6 @@ const ProduitsListe = () => {
               "Network response was not ok " + response.statusText
             );
           }
-
           const data = await response.json();
 
           const filteredProducts = data.filter(

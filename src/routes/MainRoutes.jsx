@@ -19,18 +19,29 @@ const MainRoutes = () => {
 
   return (
     <Routes>
-      <Route path="/" element={!user?.role ? <Login /> : <Home />} />
+      <Route path="/login" element={!user ? <Login /> : <Navigate to="/" />} />
+      <Route
+        path="/register"
+        element={!user ? <Register /> : <Navigate to="/" />}
+      />
 
-      {user?.role === "admin" && (
+      {user && (
         <>
+          <Route path="/" element={<Home />} />
           <Route path="/products" element={<ProductList />} />
           <Route path="/detailProduct/:id" element={<ProductDetail />} />
-          <Route path="/addProduct" element={<ProductAdd />} />
-          <Route path="/modifierProduct/:id" element={<ProductEdit />} />
-          <Route path="/deleteProduct/:id" element={<ProductDelete />} />
-          <Route path="/users" element={<UsersList />} />
-          <Route path="/modifierUser/:id" element={<UserEdit />} />
-          <Route path="/deleteUser/:id" element={<UserDelete />} />
+          <Route path="/profile/" element={<UserProfile />} />
+
+          {user.role === "admin" && (
+            <>
+              <Route path="/addProduct" element={<ProductAdd />} />
+              <Route path="/modifierProduct/:id" element={<ProductEdit />} />
+              <Route path="/deleteProduct/:id" element={<ProductDelete />} />
+              <Route path="/users" element={<UsersList />} />
+              <Route path="/modifierUser/:id" element={<UserEdit />} />
+              <Route path="/deleteUser/:id" element={<UserDelete />} />
+            </>
+          )}
         </>
       )}
 
@@ -50,9 +61,9 @@ const MainRoutes = () => {
       )}
 
       <Route path="/profile/:id" element={<UserProfile />} />
-      <Route path="*" element={<Navigate to="/" />} />
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
+      <Route path="*" element={<Navigate to="/login" />} />
     </Routes>
   );
 };

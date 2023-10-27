@@ -10,8 +10,10 @@ import {
   TextField,
 } from "@mui/material";
 import axios from "axios";
+import { useAuth } from "../contexts/AuthProvider";
 
 const ProductEdit = () => {
+  const { user } = useAuth();
   const { id } = useParams();
   const [product, setProduct] = useState({});
   const [newValues, setNewValues] = useState({
@@ -21,20 +23,16 @@ const ProductEdit = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const userStored = localStorage.getItem("user");
-    const token = userStored ? JSON.parse(userStored).token : null;
-
-    if (token) {
+    if (user) {
       axios
         .get(`http://localhost:5003/ProduitsListe/${id}`, {
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
+            Authorization: `Bearer ${user.token}`,
           },
         })
         .then((response) => {
           setProduct(response.data);
-          // Remplir les nouvelles valeurs avec les anciennes valeurs
           setNewValues((prevValues) => ({
             ...prevValues,
             nom: response.data.nom,
@@ -45,9 +43,9 @@ const ProductEdit = () => {
           console.error("Error fetching product details:", error.message);
         });
     } else {
-      console.error("Token not found");
+      console.error("User not found");
     }
-  }, [id]);
+  }, [id, user]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
