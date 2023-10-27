@@ -176,6 +176,8 @@ const UserEdit = () => {
                   >
                     <MenuItem value="admin">Admin</MenuItem>
                     <MenuItem value="adherent">Adherent</MenuItem>
+                    <MenuItem value="commercant">Commercant</MenuItem>
+
                     <MenuItem value="user">User</MenuItem>
                   </Select>
                 </FormControl>
