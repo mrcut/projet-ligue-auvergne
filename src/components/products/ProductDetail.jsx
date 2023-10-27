@@ -49,6 +49,7 @@ const ProductDetail = () => {
           <Typography color="textSecondary">
             Quantité: {product.quantite}
           </Typography>
+          <Typography color="textSecondary">Type: {product.type}</Typography>
         </CardContent>
       </Card>
 
