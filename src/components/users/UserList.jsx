@@ -1,48 +1,39 @@
-import React, { useState, useEffect } from "react";
-import {
-  Container,
-  Typography,
-  Button,
-  Grid,
-} from "@mui/material";
-import { Link, useNavigate } from "react-router-dom";
+import { Button, Container, Grid, Typography } from "@mui/material";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import UserCard from "./UserCard";
+import { useAuth } from "../contexts/AuthProvider";
 
 const UsersList = () => {
   const navigate = useNavigate();
-  const [users, setUsers] = useState([]);
+  const { user } = useAuth();
+  const [userList, setUserList] = useState([]);
 
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const userStored = localStorage.getItem("user");
-        if (!userStored) return console.error("User not found in localStorage");
-
-        const { token } = JSON.parse(userStored);
-        if (!token)
-          return console.error(
-            "Token not found in user object from localStorage"
-          );
-
         const response = await fetch("http://localhost:5003/UsersList", {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
+            Authorization: `Bearer ${user?.token}`,
           },
         });
 
-        if (!response.ok)
-          throw new Error("Network response was not ok " + response.statusText);
         const data = await response.json();
-        setUsers(data);
+        setUserList(data);
+        console.log(setUserList);
       } catch (error) {
         console.error("Error:", error);
       }
     };
 
-    fetchUsers();
-  }, []);
+    if (user) {
+      fetchUsers();
+    } else {
+      navigate("/login");
+    }
+  }, [user, navigate, setUserList]);
 
   return (
     <Container>
@@ -58,7 +49,7 @@ const UsersList = () => {
         Ajouter un Utilisateur
       </Button>
       <Grid container spacing={2}>
-        {users.map((user) => (
+        {userList.map((user) => (
           <UserCard key={user._id} user={user} />
         ))}
       </Grid>

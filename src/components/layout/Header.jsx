@@ -81,7 +81,7 @@ const Navbar = () => {
                 <MenuItem
                   onClick={handleClose}
                   component={Link}
-                  to={`/detailUser/${user._id}`}
+                  to={`/profile/${user._id}`}
                 >
                   Account
                 </MenuItem>

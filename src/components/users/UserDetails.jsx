@@ -1,12 +1,7 @@
-import React, { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
-import {
-  Container,
-  Typography,
-  Grid,
-  Button,
-} from "@mui/material";
+import { Button, Container, Grid, Typography } from "@mui/material";
 import axios from "axios";
+import React, { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import UserCard from "./UserCard";
 
 const UserDetail = () => {
@@ -29,12 +24,15 @@ const UserDetail = () => {
           return;
         }
 
-        const response = await axios.get(`http://localhost:5003/UsersList/${id}`, {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        const response = await axios.get(
+          `http://localhost:5003/UsersList/${id}`,
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
 
         setUser(response.data);
       } catch (error) {

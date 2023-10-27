@@ -1,65 +1,56 @@
-import React, { useState, useEffect } from "react";
-import {
-  Container,
-  Typography,
-  Button,
-  Grid,
-  Card,
-  CardContent,
-  CardActions,
-} from "@mui/material";
-import { Link, useNavigate } from "react-router-dom";
+import { Button, Container, Grid, Typography } from "@mui/material";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../contexts/AuthProvider";
 import ProduitCard from "./ProductCard";
 
 const ProduitsListe = () => {
   const navigate = useNavigate();
   const [produits, setProduits] = useState([]);
+  const { user, setUser } = useAuth();
 
   useEffect(() => {
     const fetchProduits = async () => {
       try {
-        const userStored = localStorage.getItem("user");
-        if (!userStored) return console.error("User not found in localStorage");
+        if (user) {
+          const response = await fetch("http://localhost:5003/ProduitsListe", {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${user.token}`,
+            },
+          });
 
-        const { token } = JSON.parse(userStored);
-        if (!token)
-          return console.error(
-            "Token not found in user object from localStorage"
-          );
-
-        const response = await fetch("http://localhost:5003/ProduitsListe", {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        });
-
-        if (!response.ok)
-          throw new Error("Network response was not ok " + response.statusText);
-        const data = await response.json();
-        setProduits(data);
+          if (!response.ok)
+            throw new Error(
+              "Erreur lors de la requête... " + response.statusText
+            );
+          const data = await response.json();
+          setProduits(data);
+        }
       } catch (error) {
-        console.error("Error:", error);
+        console.error("Erreur:", error);
       }
     };
 
     fetchProduits();
-  }, []);
+  }, [user]);
 
   return (
     <Container>
       <Typography variant="h5" sx={{ my: 3 }}>
         Liste des Produits
       </Typography>
-      <Button
-        variant="contained"
-        color="primary"
-        sx={{ mb: 3 }}
-        onClick={() => navigate("/addProduct")}
-      >
-        Ajouter un Produit
-      </Button>
+      {user.role === "admin" ? (
+        <Button
+          variant="contained"
+          color="primary"
+          sx={{ mb: 3 }}
+          onClick={() => navigate("/addProduct")}
+        >
+          Ajouter un Produit
+        </Button>
+      ) : null}
       <Grid container spacing={2}>
         {produits.map((produit) => (
           <ProduitCard key={produit._id} produit={produit} />

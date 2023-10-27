@@ -12,9 +12,10 @@ import UsersList from "../components/users/UserList";
 import UserEdit from "../components/users/UserEdit";
 import UserDetail from "../components/users/UserDetails";
 import UserDelete from "../components/users/UserDelete";
+import UserProfile from "../components/users/UserProfile";
 
 const MainRoutes = () => {
-  const { user, setUser } = useAuth();
+  const { user } = useAuth();
 
   return (
     <Routes>
@@ -30,7 +31,6 @@ const MainRoutes = () => {
           <Route path="/users" element={<UsersList />} />
           <Route path="/modifierUser/:id" element={<UserEdit />} />
           <Route path="/deleteUser/:id" element={<UserDelete />} />
-
         </>
       )}
 
@@ -38,11 +38,10 @@ const MainRoutes = () => {
         <>
           <Route path="/products" element={<ProductList />} />
           <Route path="/detailProduct/:id" element={<ProductDetail />} />
-
         </>
       )}
-      
-      <Route path="/detailUser/:id" element={<UserDetail />} />
+
+      <Route path="/profile/:id" element={<UserProfile />} />
       <Route path="*" element={<Navigate to="/" />} />
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
