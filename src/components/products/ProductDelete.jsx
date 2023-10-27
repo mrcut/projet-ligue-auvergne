@@ -11,7 +11,7 @@ const ProductDelete = () => {
     const deleteProduct = async () => {
       try {
         await axios.delete(`http://localhost:5003/ProduitSuprimmer/${id}`);
-        navigate("/products");
+        console.log("test")
       } catch (error) {
         console.error("Error deleting product:", error.message);
       }

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useParams, Link, useNavigate } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import {
   Container,
   Typography,
@@ -34,6 +34,12 @@ const ProductEdit = () => {
         })
         .then((response) => {
           setProduct(response.data);
+          // Remplir les nouvelles valeurs avec les anciennes valeurs
+          setNewValues((prevValues) => ({
+            ...prevValues,
+            nom: response.data.nom,
+            quantite: response.data.quantite,
+          }));
         })
         .catch((error) => {
           console.error("Error fetching product details:", error.message);
@@ -100,9 +106,10 @@ const ProductEdit = () => {
                   margin="normal"
                   fullWidth
                   id="quantite"
+                  label="Nouvelle Quantité"
                   name="quantite"
                   type="number"
-                  value={product.quantite}
+                  value={newValues.quantite}
                   onChange={handleInputChange}
                 />
               </CardContent>

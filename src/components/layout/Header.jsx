@@ -78,7 +78,11 @@ const Navbar = () => {
                 open={Boolean(anchorEl)}
                 onClose={handleClose}
               >
-                <MenuItem onClick={handleClose} component={Link} to="/account">
+                <MenuItem
+                  onClick={handleClose}
+                  component={Link}
+                  to={`/detailUser/${user._id}`}
+                >
                   Account
                 </MenuItem>
                 <MenuItem onClick={handleLogout}>Logout</MenuItem>
