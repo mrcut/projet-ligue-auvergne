@@ -12,6 +12,8 @@ import {
   InputLabel,
   Select,
   MenuItem,
+  InputAdornment,
+  OutlinedInput,
 } from "@mui/material";
 import axios from "axios";
 import { useAuth } from "../contexts/AuthProvider";
@@ -24,6 +26,7 @@ const ProductEdit = () => {
     nom: "",
     quantite: 0,
     type: "",
+    price: "",
   });
   const navigate = useNavigate();
 
@@ -43,6 +46,7 @@ const ProductEdit = () => {
             nom: response.data.nom,
             quantite: response.data.quantite,
             type: response.data.type,
+            price: response.data.price,
           }));
         })
         .catch((error) => {
@@ -115,6 +119,34 @@ const ProductEdit = () => {
                     <MenuItem value="natation">Natation</MenuItem>
                   </Select>
                 </FormControl>
+
+                <TextField
+                  sx={{ m: 1, width: "25ch" }}
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="end">€</InputAdornment>
+                    ),
+                  }}
+                />
+
+                <OutlinedInput
+                  variant="outlined"
+                  margin="normal"
+                  fullWidth
+                  id="price"
+                  label="Nouveau Prix"
+                  name="price"
+                  type="number"
+                  value={newValues.price}
+                  onChange={handleInputChange}
+                  endAdornment={
+                    <InputAdornment position="end">€</InputAdornment>
+                  }
+                  aria-describedby="outlined-weight-helper-text"
+                  inputProps={{
+                    "aria-label": "weight",
+                  }}
+                />
               </CardContent>
             </Card>
           </Grid>
