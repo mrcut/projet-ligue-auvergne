@@ -6,32 +6,32 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../components/contexts/AuthProvider";
 import InputMail, { regEXEmail } from "../components/forms/InputMail";
-
+ 
 const Login = () => {
   const { setUser } = useAuth();
-
+ 
   const [userLog, setUserLog] = useState({ email: "", mdp: "" });
   const [isValidEmail, setIsValidEmail] = useState(false);
   const navigate = useNavigate();
-
+ 
   const handleInputChange = (e, fieldName) => {
     const { value } = e.target;
     setUserLog((prevUserLog) => ({
       ...prevUserLog,
       [fieldName]: value,
     }));
-
+ 
     if (fieldName === "email") {
       setIsValidEmail(regEXEmail.test(value));
     }
   };
-
+ 
   const submit = async (e) => {
     e.preventDefault();
     try {
       const response = await axios.post(
         "http://localhost:5003/Login",
-
+ 
         userLog,
         { withCredentials: true }
       );
@@ -53,7 +53,7 @@ const Login = () => {
       console.error("Error during login:", error.message);
     }
   };
-
+ 
   return (
     <Box
       sx={{
@@ -109,5 +109,5 @@ const Login = () => {
     </Box>
   );
 };
-
+ 
 export default Login;

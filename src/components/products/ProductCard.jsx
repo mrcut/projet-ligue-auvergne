@@ -1,3 +1,5 @@
+// ProduitCard.jsx
+import React, { useState } from "react";
 import {
   Button,
   Card,
@@ -5,10 +7,17 @@ import {
   CardContent,
   Grid,
   Typography,
+  Checkbox,
 } from "@mui/material";
 import { Link } from "react-router-dom";
 
-const ProduitCard = ({ produit }) => {
+const ProduitCard = ({ produit, addToBasket }) => {
+  const [isChecked, setIsChecked] = useState(false);
+
+  const handleCheckboxChange = () => {
+    setIsChecked(prevState => !prevState);
+  };
+
   return (
     <Grid item xs={12} sm={6} md={4}>
       <Card sx={{ height: "100%", display: "flex", flexDirection: "column" }}>
@@ -19,6 +28,12 @@ const ProduitCard = ({ produit }) => {
           <Typography color="textSecondary">{produit.description}</Typography>
         </CardContent>
         <CardActions>
+          <Checkbox
+            checked={isChecked}
+            onChange={handleCheckboxChange}
+            color="primary"
+          />
+          
           {["Detail", "Modifier", "Delete"].map((action, index) => (
             <Link
               key={index}
