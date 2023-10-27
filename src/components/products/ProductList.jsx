@@ -1,13 +1,11 @@
 import { Button, Container, Grid, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { useAuth } from "../contexts/AuthProvider";
 import ProduitCard from "./ProductCard";
 
 const ProduitsListe = () => {
-  const navigate = useNavigate();
   const [produits, setProduits] = useState([]);
-  const { user, setUser } = useAuth();
+  const { user } = useAuth();
 
   useEffect(() => {
     const fetchProduits = async () => {
@@ -21,10 +19,11 @@ const ProduitsListe = () => {
             },
           });
 
-          if (!response.ok)
+          if (!response.ok) {
             throw new Error(
               "Erreur lors de la requête... " + response.statusText
             );
+          }
           const data = await response.json();
           setProduits(data);
         }

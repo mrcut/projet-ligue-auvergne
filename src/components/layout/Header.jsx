@@ -81,29 +81,29 @@ const Navbar = () => {
                 <MenuItem
                   onClick={handleClose}
                   component={Link}
-                  to={`/profile/${user._id}`}
+                  to={`/profile/`}
                 >
                   Account
                 </MenuItem>
                 <MenuItem onClick={handleLogout}>Logout</MenuItem>
-                {user?.role === "admin" && (
-                  <>
-                    <MenuItem
-                      onClick={handleClose}
-                      component={Link}
-                      to="/products"
-                    >
-                      Liste des Produits
-                    </MenuItem>
-                    <MenuItem
-                      onClick={handleClose}
-                      component={Link}
-                      to="/users"
-                    >
-                      List Users
-                    </MenuItem>
-                  </>
-                )}
+                {user?.role === "admin" && [
+                  <MenuItem
+                    key="products"
+                    onClick={handleClose}
+                    component={Link}
+                    to="/products"
+                  >
+                    Liste des Produits
+                  </MenuItem>,
+                  <MenuItem
+                    key="users"
+                    onClick={handleClose}
+                    component={Link}
+                    to="/users"
+                  >
+                    List Users
+                  </MenuItem>,
+                ]}
               </Menu>
             </>
           )}
