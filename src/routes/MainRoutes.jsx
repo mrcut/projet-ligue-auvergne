@@ -7,15 +7,16 @@ import ProductDetail from "../components/products/ProductDetail";
 import ProductAdd from "../components/products/ProductAdd";
 import ProductEdit from "../components/products/ProductEdit";
 import ProductDelete from "../components/products/ProductDelete";
+import { useAuth } from "../components/contexts/AuthProvider";
 
 const MainRoutes = () => {
-  const storedUser = localStorage.getItem("user");
-  const userRole = storedUser ? JSON.parse(storedUser).role : null;
+  const { user, setUser } = useAuth();
+
   return (
     <Routes>
-      <Route path="/" element={<Home />} />
+      <Route path="/" element={!user?.role ? <Login /> : <Home />} />
 
-      {userRole === "admin" && (
+      {user?.role === "admin" && (
         <>
           <Route path="/products" element={<ProductList />} />
           <Route path="/detailProduct/:id" element={<ProductDetail />} />
@@ -25,7 +26,7 @@ const MainRoutes = () => {
         </>
       )}
 
-      {(userRole === "Adhérant" || userRole) && (
+      {(user?.role === "Adhérant" || user?.role) && (
         <>
           <Route path="/products" element={<ProductList />} />
           <Route path="/detailProduct/:id" element={<ProductDetail />} />

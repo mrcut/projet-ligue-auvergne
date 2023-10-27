@@ -1,13 +1,20 @@
-import React, { useState } from "react";
-import { Container, Typography, TextField, Button } from "@mui/material";
+import {
+  Avatar,
+  Button,
+  Container,
+  TextField,
+  Typography,
+} from "@mui/material";
+import { Box } from "@mui/system";
 import axios from "axios";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 
 const ProductAdd = () => {
   const [newProduct, setNewProduct] = useState({
     nom: "",
     quantite: 0,
-    // Ajoutez d'autres champs pour les nouvelles valeurs si nécessaire
   });
   const navigate = useNavigate();
 
@@ -27,40 +34,56 @@ const ProductAdd = () => {
   };
 
   return (
-    <Container>
-      <Typography variant="h5" sx={{ marginTop: 3, marginBottom: 3 }}>
-        Ajouter un Nouveau Produit
-      </Typography>
-      <form onSubmit={handleSubmit}>
-        <TextField
-          variant="outlined"
-          margin="normal"
-          fullWidth
-          id="nom"
-          label="Nom"
-          name="nom"
-          value={newProduct.nom}
-          onChange={handleInputChange}
-          required
-        />
-        <TextField
-          variant="outlined"
-          margin="normal"
-          fullWidth
-          id="quantite"
-          label="Quantité"
-          name="quantite"
-          type="number"
-          value={newProduct.quantite}
-          onChange={handleInputChange}
-          required
-        />
-        {/* Ajoutez d'autres champs d'entrée pour les nouvelles valeurs si nécessaire */}
-        
-        <Button type="submit" variant="contained" color="primary" sx={{ marginTop: 2 }}>
-          Ajouter le Produit
-        </Button>
-      </form>
+    <Container component="main" maxWidth="xs">
+      <Box
+        sx={{
+          marginTop: 8,
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+        }}
+      >
+        <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
+          <ShoppingCartIcon />
+        </Avatar>
+
+        <Typography component="h1" variant="h5">
+          Ajouter un Nouveau Produit
+        </Typography>
+        <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
+          <TextField
+            margin="normal"
+            fullWidth
+            id="nom"
+            autoFocus
+            label="Nom"
+            name="nom"
+            value={newProduct.nom}
+            onChange={handleInputChange}
+            required
+          />
+          <TextField
+            margin="normal"
+            required
+            fullWidth
+            id="quantite"
+            label="Quantité"
+            name="quantite"
+            type="number"
+            value={newProduct.quantite}
+            onChange={handleInputChange}
+          />
+
+          <Button
+            type="submit"
+            fullWidth
+            variant="contained"
+            sx={{ mt: 3, mb: 2 }}
+          >
+            Sign In
+          </Button>
+        </Box>
+      </Box>
     </Container>
   );
 };

@@ -1,3 +1,4 @@
+import { AccountCircleRounded } from "@mui/icons-material";
 import {
   AppBar,
   Box,
@@ -8,12 +9,14 @@ import {
   Typography,
 } from "@mui/material";
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../contexts/AuthProvider";
 
 const Navbar = () => {
   const [anchorEl, setAnchorEl] = useState(null);
-  const storedUser = localStorage.getItem("user");
-  const userRole = storedUser ? JSON.parse(storedUser).role : null;
+  const { user, setUser } = useAuth();
+
+  const navigate = useNavigate();
 
   const handleMenu = (event) => {
     setAnchorEl(event.currentTarget);
@@ -23,35 +26,52 @@ const Navbar = () => {
     setAnchorEl(null);
   };
 
+  const handleLogout = () => {
+    setUser(null);
+    localStorage.removeItem("user");
+    navigate("/");
+  };
+
   return (
     <AppBar position="fixed" color="info">
       <Toolbar sx={{ justifyContent: "space-between" }}>
         <Box>
-          <Button color="inherit" component={Link} to="/">
-            Home
-          </Button>
-          {userRole && (
+          {user?.role && (
             <>
               <Button color="inherit" component={Link} to="/products">
-                Produits Foot
+                Foot
+              </Button>
+              <Button color="inherit" component={Link} to="/products">
+                Tennis
+              </Button>
+              <Button color="inherit" component={Link} to="/products">
+                Natation
               </Button>
             </>
           )}
         </Box>
+        <Toolbar>
+          <Box sx={{ textAlign: "center", flexGrow: 1 }}>
+            <Typography
+              variant="h5"
+              sx={{
+                fontWeight: "bold",
+                color: "white",
+                textShadow: "4px 2px 6px #000",
+              }}
+              component={Link}
+              to="/"
+            >
+              Projet Ligue Auvergne
+            </Typography>
+          </Box>
+        </Toolbar>
 
         <Box>
-          {!userRole && (
-            <>
-              <Button color="inherit" component={Link} to="/login">
-                Se connecter
-              </Button>
-            </>
-          )}
-
-          {userRole && (
+          {user?.role && (
             <>
               <Button color="inherit" onClick={handleMenu}>
-                Menu
+                <AccountCircleRounded sx={{ fontSize: "large" }} />
               </Button>
               <Menu
                 anchorEl={anchorEl}
@@ -61,7 +81,8 @@ const Navbar = () => {
                 <MenuItem onClick={handleClose} component={Link} to="/account">
                   Account
                 </MenuItem>
-                {userRole === "admin" && (
+                <MenuItem onClick={handleLogout}>Logout</MenuItem>
+                {user?.role === "admin" && (
                   <>
                     <MenuItem
                       onClick={handleClose}

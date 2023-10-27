@@ -1,14 +1,14 @@
-import { useContext, useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
-import axios from "axios";
-import Container from "@mui/material/Container";
+import { Box, TextField, Typography } from "@mui/material";
 import Button from "@mui/material/Button";
-import { TextField } from "@mui/material";
+import Container from "@mui/material/Container";
+import axios from "axios";
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../components/contexts/AuthProvider";
 import InputMail, { regEXEmail } from "../components/forms/InputMail";
-import UserContext from "../components/contexts/UserContext";
 
 const Login = () => {
-  const { setUser } = useContext(UserContext);
+  const { setUser } = useAuth();
 
   const [userLog, setUserLog] = useState({ email: "", mdp: "" });
   const [isValidEmail, setIsValidEmail] = useState(false);
@@ -55,40 +55,58 @@ const Login = () => {
   };
 
   return (
-    <div>
-      <h1>Login</h1>
+    <Box
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        minHeight: "100vh",
+        justifyContent: "center",
+        alignItems: "center",
+      }}
+    >
       <Container maxWidth="sm">
-        <form onSubmit={submit}>
-          <InputMail
-            label="Login"
-            placeholder="Votre Login"
-            onChange={(e) => handleInputChange(e, "email")}
-            value={userLog.email}
-          />
-          <TextField
-            fullWidth
-            name="mdp"
-            type="password"
-            variant="outlined"
-            label="Mot de passe"
-            placeholder="Votre Mot de passe"
-            onChange={(e) => handleInputChange(e, "mdp")}
-            value={userLog.mdp}
-          />
-          <Button
-            type="submit"
-            variant="contained"
-            color="primary"
-            disabled={!isValidEmail}
-          >
+        <Box
+          sx={{
+            textAlign: "center",
+          }}
+        >
+          <Typography variant="h3" gutterBottom>
             Login
+          </Typography>
+          <form onSubmit={submit}>
+            <InputMail
+              label="Login"
+              placeholder="Votre Login"
+              onChange={(e) => handleInputChange(e, "email")}
+              value={userLog.email}
+            />
+            <TextField
+              fullWidth
+              name="mdp"
+              type="password"
+              variant="outlined"
+              label="Mot de passe"
+              placeholder="Votre Mot de passe"
+              onChange={(e) => handleInputChange(e, "mdp")}
+              value={userLog.mdp}
+              sx={{ my: 2 }}
+            />
+            <Button
+              type="submit"
+              variant="contained"
+              color="primary"
+              disabled={!isValidEmail}
+              sx={{ mb: 2 }}
+            >
+              Login
+            </Button>
+          </form>
+          <Button color="inherit" component={Link} to="/register">
+            Créer son compte
           </Button>
-        </form>
+        </Box>
       </Container>
-      <Button color="inherit" component={Link} to="/register">
-        Créer son compte
-      </Button>
-    </div>
+    </Box>
   );
 };
 
