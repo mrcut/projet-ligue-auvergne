@@ -2,6 +2,10 @@ import {
   Avatar,
   Button,
   Container,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
   TextField,
   Typography,
 } from "@mui/material";
@@ -15,6 +19,7 @@ const ProductAdd = () => {
   const [newProduct, setNewProduct] = useState({
     nom: "",
     quantite: 0,
+    type: "foot",
   });
   const navigate = useNavigate();
 
@@ -74,13 +79,28 @@ const ProductAdd = () => {
             onChange={handleInputChange}
           />
 
+          <FormControl fullWidth>
+            <InputLabel id="product-label">Type de Produit</InputLabel>
+            <Select
+              labelId="product-label"
+              id="type"
+              name="type"
+              value={newProduct.type}
+              onChange={handleInputChange}
+            >
+              <MenuItem value="foot">Foot</MenuItem>
+              <MenuItem value="tennis">Tennis</MenuItem>
+              <MenuItem value="natation">Natation</MenuItem>
+            </Select>
+          </FormControl>
+
           <Button
             type="submit"
             fullWidth
             variant="contained"
             sx={{ mt: 3, mb: 2 }}
           >
-            Sign In
+            Ajouter
           </Button>
         </Box>
       </Box>

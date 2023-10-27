@@ -8,6 +8,10 @@ import {
   CardContent,
   Button,
   TextField,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
 } from "@mui/material";
 import axios from "axios";
 import { useAuth } from "../contexts/AuthProvider";
@@ -19,6 +23,7 @@ const ProductEdit = () => {
   const [newValues, setNewValues] = useState({
     nom: "",
     quantite: 0,
+    type: "",
   });
   const navigate = useNavigate();
 
@@ -37,6 +42,7 @@ const ProductEdit = () => {
             ...prevValues,
             nom: response.data.nom,
             quantite: response.data.quantite,
+            type: response.data.type,
           }));
         })
         .catch((error) => {
@@ -72,23 +78,6 @@ const ProductEdit = () => {
           <Grid item xs={12} md={6}>
             <Card>
               <CardContent>
-                <Typography
-                  variant="h6"
-                  component="div"
-                  sx={{ marginBottom: 1 }}
-                >
-                  Ancien Nom: {product.nom}
-                </Typography>
-                <Typography color="textSecondary">
-                  Ancienne Quantité: {product.quantite}
-                </Typography>
-              </CardContent>
-            </Card>
-          </Grid>
-
-          <Grid item xs={12} md={6}>
-            <Card>
-              <CardContent>
                 <TextField
                   variant="outlined"
                   margin="normal"
@@ -110,6 +99,22 @@ const ProductEdit = () => {
                   value={newValues.quantite}
                   onChange={handleInputChange}
                 />
+
+                <FormControl fullWidth>
+                  <InputLabel id="product-type">Type de Produit</InputLabel>
+                  <Select
+                    label="Nouveau Type"
+                    labelId="product-type"
+                    id="type"
+                    name="type"
+                    value={newValues.type}
+                    onChange={handleInputChange}
+                  >
+                    <MenuItem value="foot">Foot</MenuItem>
+                    <MenuItem value="tennis">Tennis</MenuItem>
+                    <MenuItem value="natation">Natation</MenuItem>
+                  </Select>
+                </FormControl>
               </CardContent>
             </Card>
           </Grid>
