@@ -45,7 +45,7 @@ const MainRoutes = () => {
         </>
       )}
 
-      {user?.role === "commercant" && (
+      {(user.role === "commercant" || user.role === "admin") && (
         <>
           <Route path="/basket" element={<Basket />} />
           <Route path="/products" element={<ProductList />} />

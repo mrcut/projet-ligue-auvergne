@@ -70,13 +70,9 @@ const Navbar = () => {
         <Box>
           {user?.role && (
             <>
-              {user?.role === "commercant" && (
+              {(user.role === "commercant" || user.role === "admin") && (
                 <>
-                  <Button
-                    color="inherit"
-                    component={Link}
-                    to={`/basket`}
-                  >
+                  <Button color="inherit" component={Link} to={`/basket`}>
                     Panier
                   </Button>
                 </>
