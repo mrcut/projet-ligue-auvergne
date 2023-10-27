@@ -20,38 +20,44 @@ const ProduitsListe = () => {
   useEffect(() => {
     const fetchProduits = async () => {
       try {
-        if (user) {
-          const storedBasket = localStorage.getItem("basket");
-          const basket = storedBasket ? JSON.parse(storedBasket) : [];
+        const userStored = localStorage.getItem("user");
+        if (!userStored) return console.error("User not found in localStorage");
 
-          const response = await fetch("http://localhost:5003/ProduitsListe", {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${user?.token}`,
-            },
-          });
-
-          if (!response.ok) {
-            throw new Error(
-              "Network response was not ok " + response.statusText
-            );
-          }
-          const data = await response.json();
-
-          const filteredProducts = data.filter(
-            (product) => !basket.includes(product._id)
+        const { token } = JSON.parse(userStored);
+        if (!token)
+          return console.error(
+            "Token not found in the user object from localStorage"
           );
 
-          setProduits(filteredProducts);
-        }
+        // Récupérer le panier depuis le local storage
+        const storedBasket = localStorage.getItem("basket");
+        const basket = storedBasket ? JSON.parse(storedBasket) : [];
+
+        const response = await fetch("http://localhost:5003/ProduitsListe", {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (!response.ok)
+          throw new Error("Network response was not ok " + response.statusText);
+        const data = await response.json();
+
+        // Filtrer les produits qui ne sont pas dans le panier
+        const filteredProducts = data.filter(
+          (product) => !basket.some((p) => p._id === product._id)
+        );
+
+        setProduits(filteredProducts);
       } catch (error) {
-        console.error("Erreur:", error);
+        console.error("Error:", error);
       }
     };
 
     fetchProduits();
-  }, [user]);
+  }, []);
 
   const addToBasket = () => {
     // Récupérer le panier depuis le local storage
@@ -78,6 +84,7 @@ const ProduitsListe = () => {
       }
     });
   };
+
   return (
     <Container>
       <Typography variant="h5" sx={{ my: 3 }}>
