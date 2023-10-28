@@ -29,6 +29,15 @@ const MainRoutes = () => {
         <>
           <Route path="/" element={<Home />} />
           <Route path="/products" element={<ProductList />} />
+          <Route path="/products/foot" element={<ProductList type="foot" />} />
+          <Route
+            path="/products/tennis"
+            element={<ProductList type="tennis" />}
+          />
+          <Route
+            path="/products/natation"
+            element={<ProductList type="natation" />}
+          />
           <Route path="/detailProduct/:id" element={<ProductDetail />} />
           <Route path="/profile/" element={<UserProfile />} />
 
@@ -49,6 +58,15 @@ const MainRoutes = () => {
         <>
           <Route path="/basket" element={<Basket />} />
           <Route path="/products" element={<ProductList />} />
+          <Route path="/products/foot" element={<ProductList type="foot" />} />
+          <Route
+            path="/products/tennis"
+            element={<ProductList type="tennis" />}
+          />
+          <Route
+            path="/products/natation"
+            element={<ProductList type="natation" />}
+          />
           <Route path="/detailProduct/:id" element={<ProductDetail />} />
         </>
       )}
