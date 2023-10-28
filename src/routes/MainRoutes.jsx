@@ -56,6 +56,15 @@ const MainRoutes = () => {
       {(user?.role === "adherant" || user?.role) && (
         <>
           <Route path="/products" element={<ProductList />} />
+          <Route path="/products/foot" element={<ProductList type="foot" />} />
+          <Route
+            path="/products/tennis"
+            element={<ProductList type="tennis" />}
+          />
+          <Route
+            path="/products/natation"
+            element={<ProductList type="natation" />}
+          />
           <Route path="/detailProduct/:id" element={<ProductDetail />} />
         </>
       )}

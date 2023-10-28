@@ -14,57 +14,57 @@ import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
 import InfoIcon from "@mui/icons-material/Info";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { useAuth } from "../contexts/AuthProvider";
 import { useBasket } from "../contexts/BasketContext";
 
-const ProductList = () => {
+const ProductList = ({ type }) => {
   const [produits, setProduits] = useState([]);
   const { user } = useAuth();
   const navigate = useNavigate();
   const { basket, addToBasket, removeFromBasket } = useBasket();
-
+  const params = useParams();
   useEffect(() => {
     const fetchProduits = async () => {
       try {
-        const userStored = localStorage.getItem("user");
-        if (!userStored) return console.error("User not found in localStorage");
+        if (user) {
+          const storedBasket = localStorage.getItem("basket");
+          const basket = storedBasket ? JSON.parse(storedBasket) : [];
 
-        const { token } = JSON.parse(userStored);
-        if (!token)
-          return console.error(
-            "Token not found in the user object from localStorage"
+          const response = await fetch("http://localhost:5003/ProduitsListe", {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${user?.token}`,
+            },
+          });
+
+          if (!response.ok) {
+            throw new Error(
+              "Network response was not ok " + response.statusText
+            );
+          }
+          const data = await response.json();
+
+          let filteredProducts = data.filter(
+            (product) => !basket.includes(product._id)
           );
 
-        // Récupérer le panier depuis le local storage
-        const storedBasket = localStorage.getItem("basket");
-        const basket = storedBasket ? JSON.parse(storedBasket) : [];
+          if (type) {
+            filteredProducts = filteredProducts.filter(
+              (product) => product.type === type
+            );
+          }
 
-        const response = await fetch("http://localhost:5003/ProduitsListe", {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        });
-
-        if (!response.ok)
-          throw new Error("Network response was not ok " + response.statusText);
-        const data = await response.json();
-
-        // Filtrer les produits qui ne sont pas dans le panier
-        const filteredProducts = data.filter(
-          (product) => !basket.some((p) => p._id === product._id)
-        );
-
-        setProduits(filteredProducts);
+          setProduits(filteredProducts);
+        }
       } catch (error) {
-        console.error("Error:", error);
+        console.error("Erreur:", error);
       }
     };
 
     fetchProduits();
-  }, []);
+  }, [user, type]);
 
   const getQuantity = (productId) => {
     const product = basket.find((p) => p._id === productId);
