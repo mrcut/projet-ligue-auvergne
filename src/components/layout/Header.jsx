@@ -46,12 +46,27 @@ const Navbar = () => {
           {user && (
             <>
               <Button color="inherit" component={RouterLink} to="/products">
+                Tout les produits
+              </Button>
+              <Button
+                color="inherit"
+                component={RouterLink}
+                to="/products/foot"
+              >
                 Foot
               </Button>
-              <Button color="inherit" component={RouterLink} to="/products">
+              <Button
+                color="inherit"
+                component={RouterLink}
+                to="/products/tennis"
+              >
                 Tennis
               </Button>
-              <Button color="inherit" component={RouterLink} to="/products">
+              <Button
+                color="inherit"
+                component={RouterLink}
+                to="/products/natation"
+              >
                 Natation
               </Button>
             </>

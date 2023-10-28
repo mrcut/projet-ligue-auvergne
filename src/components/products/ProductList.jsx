@@ -14,16 +14,16 @@ import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
 import InfoIcon from "@mui/icons-material/Info";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { useAuth } from "../contexts/AuthProvider";
 import { useBasket } from "../contexts/BasketContext";
 
-const ProductList = () => {
+const ProductList = ({ type }) => {
   const [produits, setProduits] = useState([]);
   const { user } = useAuth();
   const navigate = useNavigate();
   const { basket, addToBasket, removeFromBasket } = useBasket();
-
+  const params = useParams();
   useEffect(() => {
     const fetchProduits = async () => {
       try {
@@ -46,9 +46,15 @@ const ProductList = () => {
           }
           const data = await response.json();
 
-          const filteredProducts = data.filter(
+          let filteredProducts = data.filter(
             (product) => !basket.includes(product._id)
           );
+
+          if (type) {
+            filteredProducts = filteredProducts.filter(
+              (product) => product.type === type
+            );
+          }
 
           setProduits(filteredProducts);
         }
@@ -58,7 +64,7 @@ const ProductList = () => {
     };
 
     fetchProduits();
-  }, [user]);
+  }, [user, type]);
 
   const getQuantity = (productId) => {
     const product = basket.find((p) => p._id === productId);
